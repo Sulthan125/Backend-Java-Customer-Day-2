@@ -1,7 +1,6 @@
 package com.multipolar.bootcamp.kyc.controller;
 
 import com.multipolar.bootcamp.kyc.domain.Kyc;
-import com.multipolar.bootcamp.kyc.repository.KycRepository;
 import com.multipolar.bootcamp.kyc.service.KycService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/kyc")
-@Validated
 public class KycController {
 
     private final KycService kycService;
@@ -65,4 +64,16 @@ public class KycController {
         return ResponseEntity.noContent().build();
 
     }
+    @GetMapping("/nik/{nik}")
+    public ResponseEntity<Kyc> getKycByNik(@PathVariable String nik){
+        return kycService.getKycByNik(nik)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<Kyc>> getKycByName(@PathVariable String name){
+        return ResponseEntity.ok(kycService.getKycByName(name));
+    }
+
 }
